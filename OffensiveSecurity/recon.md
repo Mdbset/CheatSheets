@@ -111,7 +111,15 @@ _При использовании в Kali Linux требует дополнит
 
 # tcpdump
 
-`tcpdump -nn host <IP_ADDRESS> and net <IP_ADDRESS2>` - 
+## Примеры
+
+`tcpdump -nn net 10.10.10`
+
+`tcpdump -nn host <IP_ADDRESS> and net <NET>` - для хоста с адресом <IP_ADDRESS> и сети <NET> (возможен такой формат 192.168.1)
+
+## Параметры
+
+`-n` - отключает разрешение имен
 
 `-nn` - отображает номер порта вместо используемого им протокола
 
