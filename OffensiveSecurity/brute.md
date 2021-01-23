@@ -1,20 +1,32 @@
 # Linux Hashes
 
+Then use the unshadow script to combine account info from passwd_copy with password information from shadow_copy, storing the results in combined
+
+`unshadow passwd_copy shadow_copy > combined`
+
+`john combined --format=crypt`
+
 # Windows Hashes
 
 ## LM hash brute
 
+Hashs.txt file format
+
+`alex:1009:AF83DBF0052EE4717584248B8D2C9F9E:A65C3DA63FDB6CA22C172B13169D62A5:::`
+`eugen:1006:09EEAB5AA415D6E4AAD3B435B51404EE:18DA6C2895C549E266745951D5DC66CB:::`
+
+
 `john --test` - benchmark
 
-`john sam.txt`
+`john hashs.txt`
 
-`john --show sam.txt` - вывод результатов
+`john --show hashs.txt` - вывод результатов
 
 `cat ~/.john/john.pot` 
 
 ## NT hash brute
 
-`john --format=nt sam.txt`
+`john --format=nt hashs.txt`
 
 ## Cracking NT with a cracked LM
 

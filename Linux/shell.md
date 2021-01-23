@@ -6,7 +6,7 @@ There are several keyboard shortcuts available:
 `Ctrl-Shift-O`: Split the view horizontally.
 
 `Ctrl-Shift-<Plus>`: Zoom In
-`Ctrl-Shift-<Plus>`: Zoom Out
+`Ctrl-<Plus>`: Zoom Out
 
 `Ctrl-Shift-P`: Focus be active on the previous view.
 `Ctrl-Shift-N`: Focus be active on the next view.
